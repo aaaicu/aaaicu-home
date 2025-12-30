@@ -1,0 +1,7 @@
+zigbeeManufacturer:
+  - id: "_TZE204_qasjif9e/TS0601"
+    deviceLabel: "aaaicu mmWave Presence"
+    manufacturer: "_TZE204_qasjif9e"
+    model: "TS0601"
+    deviceProfileName: "aaaicu-tuya-mmwave-presence"
+

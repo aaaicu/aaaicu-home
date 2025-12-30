@@ -1,0 +1,13 @@
+name: aaaicu-tuya-mmwave-presence
+components:
+  - id: main
+    capabilities:
+      - id: motionSensor
+        version: 1
+      - id: illuminanceMeasurement
+        version: 1
+      - id: vehicleconnect17671.distancecm
+        version: 1
+    categories:
+      - name: MotionSensor
+

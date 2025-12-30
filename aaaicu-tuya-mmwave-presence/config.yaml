@@ -1,0 +1,11 @@
+name: aaaicu-tuya-mmwave-presence
+packageKey: aaaicu-tuya-mmwave-presence
+description: Tuya TS0601 mmWave Presence Sensor (EF00) - aaaicu
+vendorSupportInformation: https://github.com/aaaicu/aaaicu-tuya-mmwave-presence
+
+permissions:
+  zigbee: {}
+
+profiles:
+  - aaaicu-tuya-mmwave-presence.yaml
+

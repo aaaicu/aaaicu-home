@@ -1,0 +1,34 @@
+{
+  "dashboard": {
+    "states": [
+      {
+        "label": "{{distance.value}} {{distance.unit}}"
+      }
+    ],
+    "actions": []
+  },
+  "detailView": [
+    {
+      "label": "Distance",
+      "displayType": "state",
+      "state": {
+        "label": "{{distance.value}} {{distance.unit}}"
+      }
+    }
+  ],
+  "automation": {
+    "conditions": [
+      {
+        "label": "Distance",
+        "displayType": "numberField",
+        "numberField": {
+          "value": "distance.value",
+          "unit": "distance.unit",
+          "range": [0, 800]
+        }
+      }
+    ],
+    "actions": []
+  }
+}
+
