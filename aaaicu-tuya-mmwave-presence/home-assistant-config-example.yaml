@@ -1,0 +1,28 @@
+# Home Assistant 설정 예시
+# configuration.yaml 또는 sensors.yaml에 추가
+
+# 방법 1: Template Sensor로 distance 값 추출
+# SmartThings 통합에서 디바이스를 먼저 설정한 후, 
+# Developer Tools > States에서 device의 상태를 확인하여 
+# 실제 attribute 이름을 확인한 후 적용하세요.
+
+template:
+  - sensor:
+      - name: "mmWave Presence Distance"
+        unique_id: "tuya_mmwave_presence_distance"
+        state: "{{ state_attr('binary_sensor.mmwave_presence_sensor', 'vehicleconnect17671_distancecm_distance') }}"
+        unit_of_measurement: "cm"
+        device_class: "distance"
+        # 또는 state_attr 대신 다음과 같이 시도해볼 수 있습니다:
+        # state: "{{ state_attr('binary_sensor.mmwave_presence_sensor', 'distance') }}"
+        
+        # 값이 객체인 경우 value 속성 추출
+        # state: "{{ state_attr('binary_sensor.mmwave_presence_sensor', 'vehicleconnect17671_distancecm_distance').value if state_attr('binary_sensor.mmwave_presence_sensor', 'vehicleconnect17671_distancecm_distance') is mapping else state_attr('binary_sensor.mmwave_presence_sensor', 'vehicleconnect17671_distancecm_distance') }}"
+
+# 방법 2: 모든 SmartThings 디바이스의 속성 확인용 센서
+# (디버깅용 - 실제 attribute 이름을 확인하기 위해)
+      - name: "mmWave Presence Debug"
+        unique_id: "tuya_mmwave_presence_debug"
+        state: "{{ states.binary_sensor.mmwave_presence_sensor | to_json }}"
+        # 이 센서로 모든 속성을 확인한 후, 실제 속성 이름을 찾아서 위의 센서를 수정하세요.
+

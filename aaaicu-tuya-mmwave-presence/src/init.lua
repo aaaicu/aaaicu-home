@@ -9,6 +9,8 @@ local capabilities = require "st.capabilities"
 local TUYA_EF00_CLUSTER = 0xEF00
 local TUYA_CMD_REPORT   = 0x02
 
+-- Custom capability for distance measurement (no standard capability available)
+-- Using standard pattern: namespace.capability-name format
 local CAP_DISTANCE = capabilities["vehicleconnect17671.distancecm"]
 
 local function to_bytes(payload)
@@ -37,6 +39,7 @@ local function u32_be(b1,b2,b3,b4)
 end
 
 local function tuya_handler(driver, device, zb_rx)
+  -- Extract body bytes from Zigbee message
   local body_bytes = nil
   if zb_rx and zb_rx.body and zb_rx.body.zcl_body then
     body_bytes = zb_rx.body.zcl_body.body_bytes
@@ -44,14 +47,17 @@ local function tuya_handler(driver, device, zb_rx)
 
   local b = to_bytes(body_bytes)
   if #b < 6 then
+    log.warn("[aaaicu] Tuya message too short, ignoring")
     return
   end
 
   local dp    = b[3]
   local dtype = b[4]
-  local len   = u16_be(b[5], b[6])
+  local len = u16_be(b[5], b[6])
 
+  -- Validate payload length
   if #b < (6 + len) then
+    log.warn(string.format("[aaaicu] Invalid payload length: expected %d bytes, got %d", 6 + len, #b))
     return
   end
 
@@ -65,14 +71,14 @@ local function tuya_handler(driver, device, zb_rx)
 
   -- DP09: distance cm (type 0x02, len 4)
   if dp == 0x09 and dtype == 0x02 and len == 4 then
-
     if CAP_DISTANCE == nil then
-      log.error("[aaaicu] CAP_DISTANCE is nil - capability id mismatch?")
-    else
-      log.info("[aaaicu] CAP_DISTANCE ok, emitting distance event")
+      log.error("[aaaicu] CAP_DISTANCE is nil - capability id mismatch? Check profile configuration.")
+      return
     end
 
     local distance_cm = u32_be(b[7], b[8], b[9], b[10])
+    
+    -- Emit distance event using standard pattern
     device:emit_event(CAP_DISTANCE.distance({ value = distance_cm, unit = "cm" }))
     log.info(string.format("[aaaicu] DP09 distance=%d cm", distance_cm))
     return
